@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Tech-She Cab Booking</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            background-color: #f8f8f8;
+            padding: 10px;
+            text-align: center;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        select, button {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Book Your Cab</h1>
+    </header>
+    <main>
+        <div>
+            <!-- Added Dropdown for location selection -->
+            <label for="location">Select Location:</label>
+            <select id="location">
+                <option value="chandigarh">Chandigarh</option>
+                <option value="punjab">Punjab</option>
+                <option value="haryana">Haryana</option>
+                <!-- Add more options as needed -->
+            </select>
+        </div>
+        <!-- Added Book Cab button -->
+        <button id="bookCab">Book Cab</button>
+    </main>
+
+    <script>
+        // Added functionality for dropdown and button
+        document.getElementById('bookCab').addEventListener('click', function() {
+            const selectedLocation = document.getElementById('location').value;
+            alert('You have selected: ' + selectedLocation);
+        });
+    </script>
+    
+    <!-- Here is the complete code -->
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leaflet Directions Map</title>
+
+    <!-- Leaflet CSS and JS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Leaflet Routing Machine CSS and JS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"
+    />
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+
+    <style>
+      /* Make the page and map take full height */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 90%; /* 90% of screen height */
+        width: 100%;
+      }
+      #floating-panel {
+        padding: 10px;
+        background-color: #fff;
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        border-radius: 8px;
+        box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+      }
+      button {
+        background-color: red; /* Red button color */
+        color: white; /* White text color */
+        border: none; /* No border */
+        padding: 10px 20px; /* Padding for button */
+        border-radius: 5px; /* Rounded corners */
+        cursor: pointer; /* Pointer cursor on hover */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="floating-panel">
+      <label for="start"><b>Start:</b></label>
+      <select id="start">
+        <option value="30.741482,76.768066">Sector 17, Chandigarh</option>
+        <option value="30.7393,76.7822">Sector 22, Chandigarh</option>
+        <option value="30.7570,76.7665">PGI Hospital, Chandigarh</option>
+        <option value="30.7490,76.7850">Rose Garden, Chandigarh</option>
+        <option value="30.7333,76.8190">Sukhna Lake, Chandigarh</option>
+        <option value="30.7525,76.8057">Rock Garden, Chandigarh</option>
+        <option value="30.7434,76.7805">Elante Mall</option> 
+        <option value="30.7355,76.7622">Panjab University</option> 
+        <option value="30.7358,76.7980">Chandigarh Railway Station</option> 
+        <option value="30.6370,76.7812">Chandigarh Airport</option>     
+        <option value="30.68104428825416, 76.60538772568248">Chandigarh Group of Colleges Jhanjheri</option>
+        <option value="30.687391776726557, 76.6644646680107">Chandigarh Group of Colleges Landran</option> 
+      </select>
+
+      <label for="end"><b>End:</b></label>
+      <select id="end">
+        <option value="30.741482,76.768066">Sector 17, Chandigarh</option>
+        <option value="30.7393,76.7822">Sector 22, Chandigarh</option>
+        <option value="30.7570,76.7665">PGI Hospital, Chandigarh</option>
+        <option value="30.7490,76.7850">Rose Garden, Chandigarh</option>
+        <option value="30.7333,76.8190">Sukhna Lake, Chandigarh</option>
+        <option value="30.7525,76.8057">Rock Garden, Chandigarh</option>
+        <option value="30.7434,76.7805">Elante Mall</option> 
+        <option value="30.7355,76.7622">Panjab University</option> 
+        <option value="30.7358,76.7980">Chandigarh Railway Station</option> 
+        <option value="30.6370,76.7812">Chandigarh Airport</option>     
+        <option value="30.68104428825416, 76.60538772568248">Chandigarh Group of Colleges Jhanjheri</option>
+        <option value="30.687391776726557, 76.6644646680107">Chandigarh Group of Colleges Landran</option> 
+    
+      </select>
+
+      <button onclick="bookNow()">Book Now</button>
+    </div>
+
+    <div id="map"></div>
+
+    <script>
+      // Initialize the map and set view to Chandigarh
+      var map = L.map("map").setView([30.7333, 76.7794], 13);
+
+      // Load and display OpenStreetMap tiles
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      // Declare routing control (will be updated dynamically)
+      let routingControl;
+
+      // Function to highlight the route on the map
+      function bookNow() {
+        // Get coordinates from the selected options
+        const startCoords = document.getElementById("start").value.split(",");
+        const endCoords = document.getElementById("end").value.split(",");
+
+        // If there is an existing route, remove it
+        if (routingControl) {
+          map.removeControl(routingControl);
+        }
+
+        // Create a new routing control and add it to the map
+        routingControl = L.Routing.control({
+          waypoints: [
+            L.latLng(startCoords[0], startCoords[1]),
+            L.latLng(endCoords[0], endCoords[1]),
+          ],
+          routeWhileDragging: true,
+        }).addTo(map);
+
+        // Add markers for start and end points
+        L.marker([startCoords[0], startCoords[1]], {
+          icon: L.icon({
+            iconUrl: "https://upload.wikimedia.org/wikipedia/commons/f/fc/Marker_red.png", // Red marker icon
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+          }),
+        }).addTo(map);
+
+        L.marker([endCoords[0], endCoords[1]], {
+          icon: L.icon({
+            iconUrl: "https://upload.wikimedia.org/wikipedia/commons/8/88/Marker_green.png", // Green marker icon
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+          }),
+        }).addTo(map);
+      }
+    </script>
+  </body>
+</html>
